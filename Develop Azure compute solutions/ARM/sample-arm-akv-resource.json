@@ -3,22 +3,13 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "keyVaultName": {
-            "type": "string",
-            "metadata": {
-                "description": "Name of the existing Key Vault"
-            }
+            "type": "string"
         },
         "tenantId": {
-            "type": "string",
-            "metadata": {
-                "description": "Tenant ID where the UAMI is located"
-            }
+            "type": "string"
         },
         "uamiObjectId": {
-            "type": "string",
-            "metadata": {
-                "description": "Object ID of the User-Assigned Managed Identity"
-            }
+            "type": "string"
         }
     },
     "resources": [
@@ -26,6 +17,10 @@
             "type": "Microsoft.KeyVault/vaults/accessPolicies",
             "name": "[concat(parameters('keyVaultName'), '/add')]",
             "apiVersion": "2019-09-01",
+            "dependsOn": [
+                "[concat('Microsoft.KeyVault/vaults/', parameters('keyVaultName'))]",
+                "[concat('Microsoft.ManagedIdentity/userAssignedIdentities/', parameters('uamiObjectId'))]"
+            ],
             "properties": {
                 "accessPolicies": [
                     {
