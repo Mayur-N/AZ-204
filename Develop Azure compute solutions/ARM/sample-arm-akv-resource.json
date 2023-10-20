@@ -1,0 +1,43 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "keyVaultName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the existing Key Vault"
+            }
+        },
+        "tenantId": {
+            "type": "string",
+            "metadata": {
+                "description": "Tenant ID where the UAMI is located"
+            }
+        },
+        "uamiObjectId": {
+            "type": "string",
+            "metadata": {
+                "description": "Object ID of the User-Assigned Managed Identity"
+            }
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.KeyVault/vaults/accessPolicies",
+            "name": "[concat(parameters('keyVaultName'), '/add')]",
+            "apiVersion": "2019-09-01",
+            "properties": {
+                "accessPolicies": [
+                    {
+                        "tenantId": "[parameters('tenantId')]",
+                        "objectId": "[parameters('uamiObjectId')]",
+                        "permissions": {
+                            "certificates": ["get", "list", "delete", "create", "import", "update"],
+                            "secrets": ["get", "list", "set", "delete"]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}
